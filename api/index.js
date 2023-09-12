@@ -6,26 +6,30 @@
 let body = document.getElementById("main");
 let subscriptionTitle = document.querySelector(".subscription-title");
 let tableCycleSub = document.getElementById("table-cycle-sub");
+let vehicleInput = document.getElementById("vehicle-input");
+let btnCall = document.getElementById("btn-input-vehicle");
+let authentication =
+    "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI2MDAwIiwic3ViIjoiZGV2MyIsImV4cCI6MTY5NDU5ODg3Mn0.zVoOttB-RrAB9i9aHgybOKdFvyboMiYXHe4Jugowy0GuB264wowrLR6DUH0YTPePyKHw_Hc0JG9bU7iyiOY3oQ";
 
-var getSubCurrentLocal = fetch(
-    "http://localhost:8080/services/subscriptionservice/api/driver/subscription-data/current",
-    {
-        headers: {
-            accept: "*/*",
-            Authorization:
-                "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI1OTg2Iiwic3ViIjoiZGV2MyIsImV4cCI6MTY5MzQ0NjgyOX0.K3VuT4XVV1FqkmJrwGVZ5zaByRgeAehXkXhMHEKBqWOQXmF3g0aoXv3-uj56qDQ7HLzteHaKpoK3defHWY2Reg",
-        },
-        method: "GET",
-    }
-);
+var getSubCurrentLocal = (vehicle) => {
+    return fetch(
+        `http://localhost:8080/services/subscriptionservice/api/v2/driver/subscription-data/vehicle/${vehicle}/current`,
+        {
+            headers: {
+                accept: "*/*",
+                Authorization: authentication,
+            },
+            method: "GET",
+        }
+    );
+};
 
 let getPackageDataInfo = fetch(
-    "http://localhost:8080/services/subscriptionservice/api/package-data/53",
+    "https://api.dev.selex.vn/services/subscriptionservice/api/package-data/53",
     {
         headers: {
             accept: "*/*",
-            Authorization:
-                "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI1OTg2Iiwic3ViIjoiZGV2MyIsImV4cCI6MTY5MzQ0NjgyOX0.K3VuT4XVV1FqkmJrwGVZ5zaByRgeAehXkXhMHEKBqWOQXmF3g0aoXv3-uj56qDQ7HLzteHaKpoK3defHWY2Reg",
+            Authorization: authentication,
         },
         method: "GET",
     }
@@ -41,14 +45,15 @@ let getPackageDataInfo = fetch(
     }
 })();
 
-getSubCurrentLocal
-    .then(async (res) => {
-        let cycCurrentIndex = 0;
+const callSub = () => {
+    let vehicleSerial = vehicleInput.value;
+    tableCycleSub.innerHTML = "";
+    getSubCurrentLocal(vehicleSerial)
+        .then(async (res) => {
+            let cycCurrentIndex = 0;
 
-        try {
-            var data = await res.json();
-
-            data.forEach((sub) => {
+            try {
+                var sub = await res.json();
                 console.info(sub);
 
                 document.querySelector(".subscription-title").textContent =
@@ -83,7 +88,7 @@ getSubCurrentLocal
                             : "";
 
                     let rowContent = `
-                            <th scope="row">${index + 1}</th>
+                            <th scope="row">${billing.id}</th>
                             <td>${billing.startDate}</td>
                             <td>${billing.endDate}</td>
                             <td>${billing.swapCount}</td>
@@ -120,6 +125,9 @@ getSubCurrentLocal
                                     (billing.distanceExceed / 1000) * 100
                                 ) / 100
                             }</td>
+                            <td>${billing.priceOfPackage}</td>
+                            <td>${billing.discount}</td>
+                            <td>${billing.whyDiscount}</td>
                             <td>${billing.totalCost}</td>
                             <td>${billing.deposited}</td>
                             <td>${billing.debt}</td>`;
@@ -130,21 +138,25 @@ getSubCurrentLocal
                 });
                 let rowLast = document.createElement("tr");
                 let rowContent = `
-                            <td colspan="8"></td>
+                            <td colspan="11"></td>
                             <td>Tổng hợp</td>
                             <td>${totalCost}</td>
                             <td>${totalDeposited}</td>
                             <td class="table-danger">${sub.totalDebt}</td>`;
                 rowLast.innerHTML = rowContent;
                 tableCycleSub.appendChild(rowLast);
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    })
-    .catch((error) => console.error(error));
+            } catch (error) {
+                console.error(error);
+            }
+        })
+        .catch((error) => console.error(error));
+};
 
 let createTable = () => {
     let container = document.createElement("div");
     container.classList.add(["container", "p-3"]);
 };
+
+btnCall.addEventListener("click", () => {
+    callSub();
+});

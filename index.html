@@ -22,11 +22,20 @@
         th {
             text-align: center;
         }
+
+        td {
+            max-width: 200px;
+        }
     </style>
 </head>
 
 <body>
+
     <div class="container subscription p-3">
+        <div class="div">
+            <input type="text" id="vehicle-input" value="NADE0000">
+            <button id="btn-input-vehicle">reload</button>
+        </div>
         <h2 class="subscription-title">name subscription</h2>
         <p class="user">khách hàng: <span class="username">NGUYEN VAN A</span> </p>
         <p>xe: <span class="vehicle">NADE0000</span> </p>
@@ -37,23 +46,26 @@
         <h2 class="subscription-title">Thông tin gói dịch vụ</h2>
     </div>
 
-    <div class="container p-3">
+    <div class="container-xl p-3">
         <h3>Chu kỳ thanh toán</h3>
         <table class="table table-bordered">
             <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">bắt đầu</th>
-                    <th scope="col">kết thúc</th>
-                    <th scope="col">Tổng lượt <br> đổi pin</th>
-                    <th scope="col">Quảng đường <br> đi được</th>
-                    <th scope="col">Giới hạn <br>đổi pin</th>
-                    <th scope="col">Giới hạn <br>quãng đường</th>
-                    <th scope="col">lượt đổi <br> vượt quá</th>
-                    <th scope="col">quảng đường <br> vượt quá</th>
-                    <th scope="col">Tổng chi phí</th>
-                    <th scope="col">Tiền đã đóng</th>
-                    <th scope="col">Tiền còn nợ</th>
+                    <th scope="col">start</th>
+                    <th scope="col">end</th>
+                    <th scope="col">swap</th>
+                    <th scope="col">km</th>
+                    <th scope="col">swap max</th>
+                    <th scope="col">km max</th>
+                    <th scope="col">swap exceed</th>
+                    <th scope="col">km exceed</th>
+                    <th scope="col">price Of Package</th>
+                    <th scope="col">discount</th>
+                    <th scope="col">why discount</th>
+                    <th scope="col">total cost</th>
+                    <th scope="col">deposited</th>
+                    <th scope="col">debt</th>
                 </tr>
             </thead>
             <tbody id="table-cycle-sub">
